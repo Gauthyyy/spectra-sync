@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpectraSync</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Real-time DSP Analyzer</p>
+        <h1>SpectraSync</h1>
+        <p class="subtitle">Live microphone waveform and FFT spectrum visualization.</p>
+      </div>
+      <div class="control-panel">
+        <button id="startButton" class="btn btn-primary">Start</button>
+        <button id="stopButton" class="btn btn-secondary" disabled>Stop</button>
+        <label class="control-label">
+          FFT Size
+          <select id="fftSizeSelect">
+            <option value="256">256</option>
+            <option value="512">512</option>
+            <option value="1024" selected>1024</option>
+            <option value="2048">2048</option>
+          </select>
+        </label>
+      </div>
+    </header>
+
+    <section class="status-panel">
+      <div class="status-copy">
+        <p id="statusText">Click Start to grant microphone access and begin visualization.</p>
+        <p class="status-note">For best results, run this app from a local server or HTTPS.</p>
+      </div>
+      <div class="meter-row">
+        <div class="meter-label">Input level</div>
+        <div class="db-meter">
+          <div id="dbMeterFill" class="db-meter-fill"></div>
+        </div>
+        <span id="dbValue" class="db-value">-100 dBFS</span>
+      </div>
+    </section>
+
+    <main class="visualizer-grid">
+      <section class="panel">
+        <div class="panel-header">
+          <span>Oscilloscope</span>
+          <span class="panel-note">Time domain</span>
+        </div>
+        <canvas id="waveformCanvas" width="1200" height="300"></canvas>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <span>Spectrum Analyzer</span>
+          <span class="panel-note">Frequency domain (FFT)</span>
+        </div>
+        <canvas id="spectrumCanvas" width="1200" height="300"></canvas>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Built with Web Audio API · Canvas · Vanilla JavaScript</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
