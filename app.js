@@ -18,6 +18,12 @@ let animationFrameId = null;
 let timeDomainData = null;
 let frequencyData = null;
 
+let cachedWaveformHeight = null;
+let cachedWaveformGradient = null;
+
+let cachedSpectrumHeight = null;
+let cachedSpectrumGradient = null;
+
 function getSelectedFftSize() {
   return Number(fftSizeSelect.value) || 1024;
 }
@@ -149,11 +155,14 @@ function drawWaveform() {
 
   waveformCtx.clearRect(0, 0, width, height);
 
-  const background = waveformCtx.createLinearGradient(0, 0, 0, height);
-  background.addColorStop(0, 'rgba(124, 92, 255, 0.18)');
-  background.addColorStop(1, 'rgba(4, 5, 10, 0.95)');
+  if (cachedWaveformHeight !== height || !cachedWaveformGradient) {
+    cachedWaveformGradient = waveformCtx.createLinearGradient(0, 0, 0, height);
+    cachedWaveformGradient.addColorStop(0, 'rgba(124, 92, 255, 0.18)');
+    cachedWaveformGradient.addColorStop(1, 'rgba(4, 5, 10, 0.95)');
+    cachedWaveformHeight = height;
+  }
 
-  waveformCtx.fillStyle = background;
+  waveformCtx.fillStyle = cachedWaveformGradient;
   waveformCtx.fillRect(0, 0, width, height);
 
   waveformCtx.lineWidth = 2.5;
@@ -198,10 +207,14 @@ function drawSpectrum() {
 
   spectrumCtx.clearRect(0, 0, width, height);
 
-  const background = spectrumCtx.createLinearGradient(0, 0, 0, height);
-  background.addColorStop(0, 'rgba(4, 5, 10, 0.95)');
-  background.addColorStop(1, 'rgba(10, 12, 28, 0.95)');
-  spectrumCtx.fillStyle = background;
+  if (cachedSpectrumHeight !== height || !cachedSpectrumGradient) {
+    cachedSpectrumGradient = spectrumCtx.createLinearGradient(0, 0, 0, height);
+    cachedSpectrumGradient.addColorStop(0, 'rgba(4, 5, 10, 0.95)');
+    cachedSpectrumGradient.addColorStop(1, 'rgba(10, 12, 28, 0.95)');
+    cachedSpectrumHeight = height;
+  }
+
+  spectrumCtx.fillStyle = cachedSpectrumGradient;
   spectrumCtx.fillRect(0, 0, width, height);
 
   const barCount = frequencyData.length;
