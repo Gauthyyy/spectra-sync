@@ -57,9 +57,25 @@ function updateDbMeter(decibels) {
   }
 }
 
+const canvasRects = new WeakMap();
+const resizeObserver = new ResizeObserver(entries => {
+  for (const entry of entries) {
+    canvasRects.set(entry.target, entry.contentRect);
+  }
+});
+
+resizeObserver.observe(waveformCanvas);
+resizeObserver.observe(spectrumCanvas);
+
 function resizeCanvas(canvas, ctx) {
   const ratio = window.devicePixelRatio || 1;
-  const { width, height } = canvas.getBoundingClientRect();
+  let rect = canvasRects.get(canvas);
+  if (!rect) {
+    rect = canvas.getBoundingClientRect();
+    canvasRects.set(canvas, rect);
+  }
+  const width = rect.width;
+  const height = rect.height;
   const displayWidth = Math.floor(width * ratio);
   const displayHeight = Math.floor(height * ratio);
 
