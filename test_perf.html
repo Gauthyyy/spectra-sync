@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head><title>Performance Test</title></head>
+<body>
+<canvas id="c" width="1000" height="500"></canvas>
+<script>
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+
+  // Baseline: create gradient every frame
+  function testBaseline() {
+    const start = performance.now();
+    for (let i = 0; i < 100000; i++) {
+      ctx.clearRect(0, 0, 1000, 500);
+      const bg = ctx.createLinearGradient(0, 0, 0, 500);
+      bg.addColorStop(0, 'rgba(124, 92, 255, 0.18)');
+      bg.addColorStop(1, 'rgba(4, 5, 10, 0.95)');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, 1000, 500);
+    }
+    const end = performance.now();
+    console.log(`Baseline: ${end - start} ms`);
+    return end - start;
+  }
+
+  // Optimized: cache gradient
+  function testOptimized() {
+    const start = performance.now();
+    let cachedBg = null;
+    let cachedHeight = null;
+
+    for (let i = 0; i < 100000; i++) {
+      ctx.clearRect(0, 0, 1000, 500);
+      if (cachedHeight !== 500 || !cachedBg) {
+        cachedBg = ctx.createLinearGradient(0, 0, 0, 500);
+        cachedBg.addColorStop(0, 'rgba(124, 92, 255, 0.18)');
+        cachedBg.addColorStop(1, 'rgba(4, 5, 10, 0.95)');
+        cachedHeight = 500;
+      }
+      ctx.fillStyle = cachedBg;
+      ctx.fillRect(0, 0, 1000, 500);
+    }
+    const end = performance.now();
+    console.log(`Optimized: ${end - start} ms`);
+    return end - start;
+  }
+
+  setTimeout(() => {
+    const baseline = testBaseline();
+    const optimized = testOptimized();
+    console.log(`Improvement: ${((baseline - optimized) / baseline * 100).toFixed(2)}%`);
+
+    // Add result to DOM for puppeteer to read
+    const div = document.createElement('div');
+    div.id = 'result';
+    div.innerText = `Baseline: ${baseline} ms, Optimized: ${optimized} ms, Improvement: ${((baseline - optimized) / baseline * 100).toFixed(2)}%`;
+    document.body.appendChild(div);
+  }, 500);
+</script>
+</body>
+</html>
