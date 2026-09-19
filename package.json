@@ -4,7 +4,7 @@
   "description": "![Status](https://img.shields.io/badge/status-active-success.svg) ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Web Audio API](https://img.shields.io/badge/Web%20Audio%20API-native-brightgreen.svg) ![Canvas API](https://img.shields.io/badge/Canvas%20API-HTML5-orange.svg)",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,10 @@
   },
   "homepage": "https://github.com/Gauthyyy/spectra-sync#readme",
   "dependencies": {
-    "express": "^5.2.1",
-    "puppeteer": "^25.1.0"
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2",
+    "puppeteer": "^25.11.0"
   }
 }
